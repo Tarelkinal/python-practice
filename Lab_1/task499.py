@@ -9,40 +9,34 @@
 import traceback
 
 
-def split_list(a_list):
-    half = len(a_list)/2
-    return a_list[:half], a_list[half:]
-
-
-def palindrome(num):
-    mas = createmas(num)
+def palindrome(num: int) -> list:
     res = []
-    split1, split2 = split_list(mas)
-    split11, split12 = split1
-    split21, split22 = split2
-    if split11 == split12.reverse():
-        res.append(split11 + split12)
+    str_num = str(num)
+
+    for i in range(len(str_num) - 1):
+        for j in range(i + 2, len(str_num) + 1):
+
+            temp_str_num = str_num[i: j]
+
+            if is_palindrome(temp_str_num):
+                res.append(int(temp_str_num))
+
+    return sorted(list(set(res)))
 
 
-    return res
+def is_palindrome(str_num: str) -> bool:
+
+    if not int(str_num):
+        return False
+
+    for i in range(len(str_num) // 2):
+
+        if str_num[i] != str_num[len(str_num) - i - 1]:
+            return False
+
+    return True
 
 
-def checkfour(fourmas):
-    res = []
-    if fourmas[0] == fourmas[3]:
-        res.append(fourmas[0] + fourmas[3])
-    print(res)
-
-
-def createmas(num):
-    res = []
-    for i in range(len(num)):
-        res.append(num % 10)
-        num = int(num/10)
-    res.reverse()
-    return res
-
-# Тесты
 try:
     assert palindrome(1551) == [55, 1551]
     assert palindrome(221122) == [11, 22, 2112, 221122]
