@@ -40,8 +40,8 @@ def extension(files):
             if counted_extensions2.count(formats[i]) == 0:
                 answer.append(formats[counted_indexes[i]])
                 counted_extensions2.append(formats[i])
-    print(answer[::-1])
-    return reversed(str(answer[::-1]))
+
+    return sorted(answer[::-1])
 
 
 # Тесты
