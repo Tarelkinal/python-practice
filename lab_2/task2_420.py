@@ -15,12 +15,16 @@
   и не делить слова.
 """
 
+
 def wiki_function():
-    for i in range(len(WikiPage))
-    line = f.readline()
-    print(line)
-    return 1
+    with open('wikipedia.txt', 'r') as f_in:
+        li = []
+        for x in f_in.readlines():
+            if x.strip():
+                li.append(x.strip())
+
+    print(1)
 
 
-# Вызов функции
-wiki_function()
+if __name__ == "__main__":
+    wiki_function()
