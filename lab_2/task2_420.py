@@ -17,13 +17,26 @@
 
 
 def wiki_function():
-    with open('wikipedia.txt', 'r') as f_in:
-        li = []
+    with open('C:/Users/K03bIPEK/PycharmProjects/python-practice/lab_2/wikipedia.txt', 'r') as f_in:
+        only_not_empty_lines = []
+        temp = ""
+        only_letters = []
+        basic = []
+        dict = {}
         for x in f_in.readlines():
+            basic.append(x)
             if x.strip():
-                li.append(x.strip())
+                only_not_empty_lines.append(x.strip())  # непустые строки
+            for i in x:
+                if i.isalpha() or i == ' ':
+                    temp = temp + i
+            only_letters.append(temp)
+            temp = ""
 
-    print(1)
+        # for x in only_letters:  # вывод текста без знаков препинания
+        #     print(x)
+        joined = ' '.join(only_not_empty_lines)  # объединенные строки
+        print(joined)
 
 
 if __name__ == "__main__":
