@@ -26,7 +26,6 @@ def count_seven(number):
                 counter = counter + 1
             number = int(number / 10)
             numericalPlace = numericalPlace - 1
-    print(counter)
     return counter
 
 
