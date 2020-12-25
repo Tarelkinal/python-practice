@@ -1,3 +1,5 @@
+import re
+from collections import Counter
 """
 Создать txt-файл, вставить туда любую англоязычную статью из Википедии.
 Реализовать одну функцию, которая выполняет следующие операции:
@@ -14,29 +16,34 @@
 - записать строку в файл, разбивая на строки, при этом на каждой строке записывать не более 100 символов
   и не делить слова.
 """
+NEW_FILE = 'new_file.txt'
+WIKIPEDIA_FILE_PATH = 'wikipedia.txt'
 
 
 def wiki_function():
-    with open('C:/Users/K03bIPEK/PycharmProjects/python-practice/lab_2/wikipedia.txt', 'r') as f_in:
-        only_not_empty_lines = []
-        temp = ""
-        only_letters = []
-        basic = []
-        dict = {}
+    with open(WIKIPEDIA_FILE_PATH, 'r') as f_in:
+        lines_li = []
         for x in f_in.readlines():
-            basic.append(x)
             if x.strip():
-                only_not_empty_lines.append(x.strip())  # непустые строки
-            for i in x:
-                if i.isalpha() or i == ' ':
-                    temp = temp + i
-            only_letters.append(temp)
-            temp = ""
+                lines_li.append(' '.join(re.findall(r'[A-Za-z]+', x.strip())))
 
-        # for x in only_letters:  # вывод текста без знаков препинания
-        #     print(x)
-        joined = ' '.join(only_not_empty_lines)  # объединенные строки
-        print(joined)
+        text = ' '.join(lines_li)
+        words_cnt_dict = Counter(text.split())
+        top_10_words = words_cnt_dict.most_common(10)
+        for i in range(len(top_10_words)):
+            print('{} place --- {} --- {} times'.format(i + 1, top_10_words[i][0], top_10_words[i][1]))
+            text = re.sub(f'\\b{top_10_words[i][0]}\\b', 'PYTHON', text)
+            print(1)
+
+        with open(NEW_FILE, 'w') as f_out:
+            counter = 0
+            for word in text.split():
+                if counter + word.__len__() > 100:
+                    counter = 0
+                    f_out.write('\n')
+
+                counter += word.__len__() + 1
+                f_out.write(word + ' ')
 
 
 if __name__ == "__main__":
