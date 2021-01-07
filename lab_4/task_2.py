@@ -1,7 +1,8 @@
 from math import fabs, cos, sin, radians, log2, sqrt, log, exp, pow
 
 
-def func_1(x, a, k, y):
+def func_1(x, y, a, k):
+    """x, y in degrees"""
     res = sqrt(fabs(cos(x**2 + radians(44)) + a * sin(k * y)**2)) - 0.6 * y**3 + log2(8)/(4 * a)
     return res
 
