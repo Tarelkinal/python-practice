@@ -1,5 +1,8 @@
+import pickle
+
 from Lab_3.Audio import Audio
 from Lab_3.DVD import DVD
+from Lab_3.logger import logging
 
 
 class Store:
@@ -8,8 +11,10 @@ class Store:
         self.shop_name = shop_name
         self.audio_col = []
         self.film_col = []
+        logging('CRE', 'создан', self.__repr__())
 
     def __add__(self, other):
+        logging('INF', 'добавлен объект', f'{repr(other)}')
         if type(other) == Audio:
             self.audio_col.append(other)
         elif type(other) == DVD:
@@ -20,22 +25,27 @@ class Store:
             for audio in self.audio_col:
                 if str(audio) == str(other):
                     self.audio_col.remove(audio)
+                    logging('INF', 'удален объект', f'{repr(audio)}')
                     break
         elif type(other) == DVD:
             for dvd in self.film_col:
                 if str(dvd) == str(other):
                     self.film_col.remove(dvd)
+                    logging('INF', 'удален объект', f'{repr(dvd)}')
+                    break
 
     def __str__(self):
         res = f'shop name: {self.shop_name}, shop address: {self.address}\n'
 
-        res += 'films presented:\n'
-        for film in self.film_col:
-            res += str(film)
+        if len(self.film_col) > 0:
+            res += 'films presented:\n'
+            for film in self.film_col:
+                res += str(film)
 
-        res += 'audio presented:\n'
-        for audio in self.audio_col:
-            res += str(audio)
+        if len(self.audio_col) > 0:
+            res += 'audio presented:\n'
+            for audio in self.audio_col:
+                res += str(audio)
 
         return res
 
@@ -64,6 +74,7 @@ class Store:
     def write_into_file(self):
         with open(f'{self.shop_name}.txt', 'w', encoding='cp1251') as f_out:
             f_out.write(self.__str__())
+            logging('INF', 'запись в файл', f'{self.__repr__()}')
 
 
 def make_test():
@@ -88,6 +99,9 @@ def make_test():
     store.write_into_file()
     with open('DVD and Audio shop.txt', 'r', encoding='cp1251') as f_in:
         assert f_in.read() == str(store)
+
+    with open('store_dump.pkl', 'wb') as f_out:
+        pickle.dump(store, f_out)
 
 
 if __name__ == '__main__':

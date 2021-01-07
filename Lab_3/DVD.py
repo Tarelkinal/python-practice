@@ -1,6 +1,7 @@
 from textwrap import dedent
 
 from Lab_3.Disk import Disk
+from Lab_3.logger import logging
 
 
 class DVD(Disk):
@@ -9,6 +10,7 @@ class DVD(Disk):
         self.producer = producer
         self.main_roles = {}
         self.company = company
+        logging('CRE', 'создан', self.__repr__())
 
     def __str__(self):
         return f"{super().__str__()}\n" + \
@@ -17,15 +19,18 @@ class DVD(Disk):
 
     def change_producer(self, producer):
         self.producer = producer
+        logging('INF', 'изменен режиссер', f'updated value: {producer}')
 
     def add_roles(self, role, name):
         self.main_roles[role] = name
+        logging('INF', 'добавлена/изменена роль', f'updated value: {role} -- {name}')
 
     def del_roles(self, role):
         try:
             self.main_roles.pop(role)
+            logging('INF', 'удалена роль', f'deleted value: {role}')
         except KeyError:
-            print('ERR')
+            logging('ERR', 'данная роль не найдена в списке', f'{role}')
 
 
 def make_test():

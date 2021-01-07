@@ -1,6 +1,7 @@
 from textwrap import dedent
 
 from Lab_3.Disk import Disk
+from Lab_3.logger import logging
 
 
 class Audio(Disk):
@@ -10,6 +11,7 @@ class Audio(Disk):
         self.studio = studio
         self.album = album
         self.performer = performer
+        logging('CRE', 'создан', self.__repr__())
 
     def __str__(self):
         return f"{super().__str__()}\n" + \
@@ -19,18 +21,21 @@ class Audio(Disk):
 
     def add_song(self, name, duration):
         self.playlist[name] = duration
+        logging('INF', 'добавлен трек в playlist', f'{name}: {duration}')
 
     def remove_song(self, name):
         try:
             self.playlist.pop(name)
+            logging('INF', 'удален трек из playlist', f'{name}')
         except KeyError:
-            print('ERR')
+            logging('ERR', 'трек не найден в playlist', f'{name}')
 
     def format_print(self):
         res = ''
         for k, v in self.playlist.items():
             res += f'name: {k}, duration: {v}'
         print(res)
+        logging('INF', 'распечатан', self.__repr__())
         return res
 
 
