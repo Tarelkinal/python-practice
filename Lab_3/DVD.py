@@ -1,18 +1,13 @@
-"""Создать производный от Disk класс DVD. Новые поля: режиссер, кинокомпания, главные роли (словарь вида роль: ФИ актера).
-    Определить конструктор, с вызовом родительского конструктора. Определить функции изменения режиссера, добавления,
-    удаления и изменения списка главных ролей. Переопределить метод преобразования в строку для печати основной
-    информации (режиссер, название фильма, жанр, кинокомпания, цена).
-"""
+from textwrap import dedent
 
-
-from Disk import Disk
+from Lab_3.Disk import Disk
 
 
 class DVD(Disk):
-    def __init__(self, name="None", genre="None", price=0, company="None", main_roles={}, producer="None"):
+    def __init__(self, name, genre, price, company, producer):
         super().__init__(name, genre, price)
         self.producer = producer
-        self.main_roles = main_roles
+        self.main_roles = {}
         self.company = company
 
     def __str__(self):
@@ -20,8 +15,41 @@ class DVD(Disk):
                f"Режиссер: {self.producer}\n" + \
                f"Кинокомпания: {self.company}\n"
 
-    def changeProducer(self, producer):
+    def change_producer(self, producer):
         self.producer = producer
 
-    def addRoles(self, Name, Surname):
-        self.main_roles.append(Surname, Name)
+    def add_roles(self, role, name):
+        self.main_roles[role] = name
+
+    def del_roles(self, role):
+        try:
+            self.main_roles.pop(role)
+        except KeyError:
+            print('ERR')
+
+
+def make_test():
+    a = DVD('New DVD', 'romance', 505, 'WB', 'Rose Smith')
+    true_dvd_represent = dedent("""\
+        Название: New DVD
+        Жанр: romance
+        Цена: 505
+        Режиссер: Rose Smith
+        Кинокомпания: WB
+    """)
+
+    assert true_dvd_represent == str(a)
+
+    a.change_producer('Will Turner')
+    assert a.producer == 'Will Turner'
+
+    a.add_roles('main', 'Elizabet Torn')
+    assert 'main' in a.main_roles.keys()
+    assert a.main_roles['main'] == 'Elizabet Torn'
+
+    a.del_roles('main')
+    assert 'main' not in a.main_roles.keys()
+
+
+if __name__ == '__main__':
+    make_test()

@@ -1,16 +1,12 @@
-"""Создать производный от Disk класс Audio. Новые поля: исполнитель, студия звукозаписи, список песен (словарь вида
-    название песни: длительность).
-Определить конструктор, с вызовом родительского конструктора. Определить
-    функции добавления новой песни, удаления песни, форматированной печати плейлиста.
-Переопределить метод преобразования в строку для печати основной информации (исполнитель, название альбома, жанр,
-    студия звукозаписи, цена)
-"""
+from textwrap import dedent
 
-from Disk import Disk
-class Audio(Disk):# Создать производный от Disk класс Audio
-    def __init__(self, name="None", genre="None", price=0, performer = "None", album = "None", studio = "None", playlist = {}):  # Определить конструктор
-        super().__init__(name, genre, price)  # с вызовом родительского конструктора.
-        self.playlist = playlist
+from Lab_3.Disk import Disk
+
+
+class Audio(Disk):
+    def __init__(self, name, genre, price, performer, album, studio):
+        super().__init__(name, genre, price)
+        self.playlist = {}
         self.studio = studio
         self.album = album
         self.performer = performer
@@ -21,35 +17,45 @@ class Audio(Disk):# Создать производный от Disk класс A
                f"Название альбома: {self.album}\n" + \
                f"Студия: {self.studio}\n"
 
+    def add_song(self, name, duration):
+        self.playlist[name] = duration
 
-    def addSong(self, name, performer, duration):
-        self.name = name
-        self.performer = performer
-        self.duration = duration
+    def remove_song(self, name):
+        try:
+            self.playlist.pop(name)
+        except KeyError:
+            print('ERR')
 
-    def removeSong(self, name):  # Определить функции изменения водителя
-        self.name = name
+    def format_print(self):
+        res = ''
+        for k, v in self.playlist.items():
+            res += f'name: {k}, duration: {v}'
+        print(res)
+        return res
 
-    def formatPlaylist(self, playlist):
-        self.playlist = playlist
+
+def make_test():
+    a = Audio('New disk', 'rock', 505, 'Mike Stallone', 'new album', 'covers io')
+    true_audio_represent = dedent("""\
+        Название: New disk
+        Жанр: rock
+        Цена: 505
+        Исполнитель: Mike Stallone
+        Название альбома: new album
+        Студия: covers io
+    """)
+    true_format_playlist_print = 'name: new song, duration: 5.32'
+
+    a.add_song('new song', 5.32)
+
+    assert true_audio_represent == str(a)
+    assert true_format_playlist_print == a.format_print()
+    assert 'new song' in a.playlist.keys()
+    assert a.playlist['new song'] == 5.32
+
+    a.remove_song('new song')
+    assert 'new song' not in a.playlist.keys()
 
 
-# def make_test():
-#     tc = Truck("Volga", 2, 2012, 1400, "Igor", "Pavlov",
-#               {
-#                    "Weels": 21,
-#                    "Tank": 420,
-#                    "Car toy": 1,
-#                })
-#     assert tc.maxCarryingCapacity == 1400
-#     assert tc.driverName + ' ' + tc.driverSurname == "Igor Pavlov"
-#     print(tc.driverName + ' ' + tc.driverSurname )
-#     tc.addLoad("Gold ring", 2)
-#     tc.deleteLoad("Weels")
-#     assert str(tc) == "Марка: Volga\nМощность: 2\nГод: 2012\nМаксимальная грузоподъемность: 1400\nФИ водителья: Igor Pavlov"
-#     tc.changeDriver('Oleg', 'Dundkin')
-#     assert tc.driverName + ' ' + tc.driverSurname == "Oleg Dundkin"
-#     assert str(tc) == "Марка: Volga\nМощность: 2\nГод: 2012\nМаксимальная грузоподъемность: 1400\nФИ водителья: Oleg Dundkin"
-#     print("Тест пройден")
-#
-# make_test()
+if __name__ == '__main__':
+    make_test()

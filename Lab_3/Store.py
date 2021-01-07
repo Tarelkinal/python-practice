@@ -1,113 +1,94 @@
-"""
-    Создать класс Store. Поля: название магазина, адрес, коллекция аудиодисков (список экземпляров класса Audio),
-    коллекция фильмов (список экземпляров класса DVD).
-    Определить конструктор.
-    Переопределить метод преобразования в строку для печати всей информации о магазине (с использованием переопределения в классах Audio и DVD).
-    Переопределить методы получения количества дисков функцией len, получения диска по индексу, изменения по
-    индексу, удаления по индексу (пусть вначале идут индексы аудиодисков, затем фильмов). Переопределить
-    операции + и - для добавления или удаления диска. Добавить функцию создания txt-файла и записи всей
-    информации в него (в том числе списков песен и главных ролей фильма).
-"""
-from Audio import Audio
-from DVD import DVD
+from Lab_3.Audio import Audio
+from Lab_3.DVD import DVD
+
 
 class Store:
-    def __init__(self, mag_name = "None", address = "None", audiokol = [], filmkol = []):
+    def __init__(self, shop_name, address):
         self.address = address
-        self.mag_name = mag_name
-        self.audiokol = audiokol
-        self.filmkol = filmkol
-
+        self.shop_name = shop_name
+        self.audio_col = []
+        self.film_col = []
 
     def __add__(self, other):
         if type(other) == Audio:
-            self.audiokol.append(other)
+            self.audio_col.append(other)
         elif type(other) == DVD:
-            self.filmkol.append(other)
+            self.film_col.append(other)
 
+    def __sub__(self, other):
+        if type(other) == Audio:
+            for audio in self.audio_col:
+                if str(audio) == str(other):
+                    self.audio_col.remove(audio)
+                    break
+        elif type(other) == DVD:
+            for dvd in self.film_col:
+                if str(dvd) == str(other):
+                    self.film_col.remove(dvd)
 
     def __str__(self):
-        res = ""
-        for e in self.filmkol:
-            res += '\n' + (str(e))
-        for e in self.audiokol:
-            res += '\n' + (str(e))
-        return res + '\n'
+        res = f'shop name: {self.shop_name}, shop address: {self.address}\n'
 
+        res += 'films presented:\n'
+        for film in self.film_col:
+            res += str(film)
+
+        res += 'audio presented:\n'
+        for audio in self.audio_col:
+            res += str(audio)
+
+        return res
 
     def __len__(self):
-        # Переопределить методы получения количества дисков функцией len
-        return len(self.audiokol) + len(self.videokol)
+        return len(self.audio_col) + len(self.film_col)
 
+    def __getitem__(self, i):
+        if i < len(self.audio_col):
+            return self.audio_col[i]
+        else:
+            return self.film_col[i - len(self.audio_col)]
 
-    def __getitem__(self, n):
-        #Переопределить методы получения количества получения диска по индексу
-        if len(self.audiokol) >= n+1:
-            return self.DVD[n]
-
-    def __setitem__(self, n, value):
-        #Переопределить метод изменения по индексу
-        if len(self.audiokol) >= n + 1 and type(value) == Drink:
-            self.drinks[n] = value
-        elif len(self.drinks) + len(self.food) <= n + 1 and type(value) == Food:
-            self.food[n - len(self.drinks)] = value
+    def __setitem__(self, i, new_obj):
+        try:
+            if i < len(self.audio_col):
+                if type(new_obj) != Audio:
+                    raise ValueError
+                self.audio_col[i] = new_obj
+            else:
+                if type(new_obj) == Audio:
+                    raise ValueError
+                self.film_col[i - len(self.audio_col)] = new_obj
+        except ValueError:
+            print('ERR')
 
     def write_into_file(self):
-        f = open(self.name + '.txt', 'w')
-        f.write(self.name + '\n' + self.adress + '\n')
-        f.write('Магазин:\n')
-        i = 1
-        f.write('Музыка:\n')
-        for audio in self.audiokol:
-            f.write(str(i) + '. ' + str(audio))
-            f.write('\n' + audio.get_composition())
-            i += 1
-        f.write('Фильмы:\n')
-        for video in self.videokol:
-            f.write(str(i) + '. ' + str(video))
-            f.write('\n' + video.get_composition())
-            i += 1
-        f.close()
+        with open(f'{self.shop_name}.txt', 'w', encoding='cp1251') as f_out:
+            f_out.write(self.__str__())
 
-
-"""
-def __len__(self):
-    logger("INF", "выполнено получение длины меню")
-    Переопределить метод получения количества пунктов меню функцией len
-    return len(self.drinks) + len(self.food)
-
-def __getitem__(self, n):
-    logger("INF", "выполнено получение индекса")
-    Переопределить метод получения напитка/блюда по индексу
-    if len(self.drinks) >= n+1:
-        return self.drinks[n]
-    elif len(self.drinks) + len(self.food) >= n+1:
-        return self.food[n - len(self.drinks)]
-
-
-def __setitem__(self, n, value):
-    logger("INF", "выполнено изменение по индексу")
-    Переопределить метод изменения по индексу
-    if len(self.drinks) >= n + 1 and type(value) == Drink:
-        self.drinks[n] = value
-    elif len(self.drinks) + len(self.food) <= n + 1 and type(value) == Food:
-        self.food[n - len(self.drinks)] = value
-
-
-def __delitem__(self, n):
-    logger("INF", "пункт меню удален")
-  Переопределить метод удаления по индексу (пусть вначале идут индексы напитков, затем горячих блюд).
-    if len(self.drinks) >= n + 1:
-        self.drinks.pop(n)
-    else:
-        self.food.pop(n - len(self.drinks))
-"""
 
 def make_test():
-    m = Store("Mvideo", "ABC street")
-    f1 = DVD("Im dragons", "Alternative rock", 200, "Apple", {"Britney": "Spears","Ed":"Boon"}, "Timur")
-    m + f1
-    print(str(m))
+    store = Store('DVD and Audio shop', '5 Avenue 31')
+    new_audio = Audio('New disk', 'rock', 505, 'Mike Stallone', 'new album', 'covers io')
+    new_dvd = DVD('New DVD', 'romance', 505, 'WB', 'Rose Smith')
+
+    store + new_audio
+    store + new_dvd
+
+    assert len(store) == 2
+
+    store - Audio('New disk', 'rock', 505, 'Mike Stallone', 'new album', 'covers io')
+    assert len(store) == 1
+    assert len(store.audio_col) == 0
+    assert str(store[0]) == str(new_dvd)
+
+    new_dvd_2 = DVD('Another new DVD', 'romance', 505, 'WB', 'Rose Smith')
+    store[0] = new_dvd_2
+    assert str(store[0]) == str(new_dvd_2)
+
+    store.write_into_file()
+    with open('DVD and Audio shop.txt', 'r', encoding='cp1251') as f_in:
+        assert f_in.read() == str(store)
 
 
-make_test()
+if __name__ == '__main__':
+    make_test()

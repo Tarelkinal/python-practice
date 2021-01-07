@@ -1,10 +1,8 @@
-#Создать класс Disk с полями название, жанр, цена. Добавить конструктор класса.
-
 class Disk:
-    def __init__(self, name="None", genre="None", price=0):  # Добавить конструктор класса.
-        self.DiskName = name  # название
-        self.DiskGenre = genre  # жанр
-        self.DiskPrice = price  # цена
+    def __init__(self, name, genre, price):
+        self.DiskName = name
+        self.DiskGenre = genre
+        self.DiskPrice = price
 
     def __str__(self):
         return f"Название: {self.DiskName}\n" + \
