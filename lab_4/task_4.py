@@ -26,7 +26,7 @@ def get_dirs_dict(path=os.getcwd()):
             return result
 
     if len(dir_li) == 1 and len(files_li) == 0:
-        return {dir_li[0].name: get_dirs_dict(path + '\\' + '\\' + dir_li[0].name)}
+        return {dir_li[0].name: get_dirs_dict(path + '\\' + dir_li[0].name)}
     else:
         result = []
         for d in dir_li:
